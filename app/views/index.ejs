@@ -1,1 +1,109 @@
-<h1>Hello World!</h1>
+ <!DOCTYPE html>
+  <html data-ng-app="chat-app">
+    <head>
+      <!--Import Google Icon Font-->
+      <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+      <link type="text/css" rel="stylesheet" href="vendors/materialize.min.css"  media="screen,projection"/>
+
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <style>
+          body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        main {
+            flex: 1 0 auto;
+        }
+      </style>
+    </head>
+
+    <body class="blue-grey lighten-5" data-ng-controller="chatController">
+      <!--Import jQuery before materialize.js-->
+      
+       <main>
+            <div class="navbar-fixed">
+                <nav>
+                    <div class="nav-wrapper green">
+                        <a href="#!" class="brand-logo">Logo</a>
+                        <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+                        <ul class="right hide-on-med-and-down">
+                            <li><a href="sass.html">Sair</a></li>
+                        </ul>
+                        <ul class="side-nav" id="mobile-demo">
+                            <li><a href="sass.html">Usuários</a></li>
+                            <li><a href="sass.html">Sass</a></li>
+                            <li><a href="badges.html">Components</a></li>
+                            <li><a href="collapsible.html">Javascript</a></li>
+                            <li><a href="mobile.html">Mobile</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+            
+            <div class="container">
+                
+                <div class="card">
+                    <div class="card-content">
+                        <div class="mensagem">
+                            
+                            <div class="row" data-ng-repeat="mensagem in mensagens">
+                                <div class="col s2">
+                                    <div class="chip">
+                                        <i class="large material-icons large">person</i>
+                                        {{userName}}
+                                    </div>
+                                </div>
+                                <div class="col s10">
+                                    <div class="conteudoMensagem">
+                                        {{message}}
+                                    </div>        
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+       </main>
+          
+       
+        <footer class="page-footer blue-grey lighten-5">
+                <div class="card white">
+                    <div class="card-content">
+                        <div class="row">
+                            <div class="input-field col s10">
+                                <input placeholder="Mensagem" id="first_name" type="text" class="validate">
+                            </div>
+                            <div class="col s2">
+                                <br/>
+                                <button class="btn btn-floating btn-large waves-effect waves-light" type="submit" name="action">
+                                    <i class="material-icons right">send</i>
+                                </button>    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </footer>       
+      
+      
+        <script type="text/javascript" src="vendors/jquery.min.js"></script>
+        <script type="text/javascript" src="vendors/materialize.min.js"></script>
+        <script type="text/javascript" src="vendors/angular.min.js"></script>
+        <script type="text/javascript" src="vendors/angular-cookies.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        
+        <script type="text/javascript" src="js/app.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $(".button-collapse").sideNav({
+                    edge: 'left',
+                    closeOnClick: true
+                });
+            })
+        </script>
+    </body>
+  </html>

@@ -1,9 +1,9 @@
-var http = require('http');
 var express = require('express');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
 var app = express();
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
 
 // == Configurações do express
 app.use(cookieParser());
@@ -15,7 +15,24 @@ app.set('view engine', 'ejs');
 app.use(express.static('wwwroot'));
 // =================================
 
-var _users = ['fabiano', 'augusto'];
+
+// Socket configs
+io.on('connection', (socket) => {
+
+    io.on('newUser', function(usuario) {
+        console.log('Usuário conectado: ' + usuario);
+        io.emit('chatMessage', { userName: usuario, message: usuario + ' acabou de entrar na conversa!' });
+    });
+
+    // socket.emit('msg', { hello: 'world' });
+    socket.on('chatMessage', function (data) {
+        console.log(data);
+    });
+});
+// ======================================
+
+
+var _users = [];
 
 function userAlreadyExists(username) {
     var result = false;
@@ -28,7 +45,9 @@ function userAlreadyExists(username) {
 }
 
 app.get('/', function(req, res) {
-
+    
+    console.log(_users);
+    
     if (req.cookies.userSession) {
         res.render('index');
     }
@@ -51,6 +70,8 @@ app.post('/login', (req, res) => {
         });
     }
     else {
+        _users.push(newUser);
+        
         res.json({
             sucesso: true,
             usuario: newUser
@@ -58,7 +79,11 @@ app.post('/login', (req, res) => {
     }
 });
 
-app.listen(1234);
 
-console.log('server running');
+
+
+var port = 1234;
+server.listen(port);
+
+console.log('Server running at Http://localhost:' + port);
 

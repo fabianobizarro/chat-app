@@ -19,14 +19,20 @@ app.use(express.static('wwwroot'));
 // Socket configs
 io.on('connection', (socket) => {
 
-    io.on('newUser', function(usuario) {
+    console.log('usuario entrou');
+    
+    socket.on('newUser', function(usuario) {
         console.log('Usuário conectado: ' + usuario);
-        io.emit('chatMessage', { userName: usuario, message: usuario + ' acabou de entrar na conversa!' });
+        io.emit('chatMessage', { userName: usuario, message: usuario + ' acabou de entrar na conversa!', data: Date.now() });
+        io.emit('newUser', usuario);
+    });
+    
+    socket.on('disconnect', function () {
+        io.emit('user disconnected');
     });
 
-    // socket.emit('msg', { hello: 'world' });
-    socket.on('chatMessage', function (data) {
-        console.log(data);
+    socket.on('chatMessage', function(data) {
+        io.emit('chatMessage', data);
     });
 });
 // ======================================
@@ -45,14 +51,24 @@ function userAlreadyExists(username) {
 }
 
 app.get('/', function(req, res) {
-    
+
     console.log(_users);
-    
+
     if (req.cookies.userSession) {
-        res.render('index');
+
+        if (!userAlreadyExists(req.cookies.userSession)) {
+            res.clearCookie('userSession');
+            res.redirect('/login');
+        }
+        else
+            res.render('index');
     }
     else
         res.redirect('/login');
+});
+
+app.get('/users', (req, res) => {
+    res.json(_users);
 });
 
 app.get('/login', (req, res) => {
@@ -71,7 +87,7 @@ app.post('/login', (req, res) => {
     }
     else {
         _users.push(newUser);
-        
+
         res.json({
             sucesso: true,
             usuario: newUser

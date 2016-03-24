@@ -2,7 +2,7 @@ angular.module('chat-app', ['ngCookies'])
 
     .service('Socket', ['$timeout', function($timeout) {
 
-        this.socket = io('localhost:1234');
+        this.socket = io('192.168.25.6:1234');
 
         this.on = function(eventName, callback) {
             if (this.socket) {
@@ -16,7 +16,6 @@ angular.module('chat-app', ['ngCookies'])
 
         this.emit = function(eventName, data) {
             if (this.socket) {
-                console.log(data);
                 this.socket.emit(eventName, data);
             }
         }
@@ -58,39 +57,74 @@ angular.module('chat-app', ['ngCookies'])
         }])
 
 
-    .controller('chatController', ['$scope', '$cookies', 'Socket',
-        function($scope, $cookies, Socket) {
-            
+    .controller('chatController', ['$scope', '$cookies', 'Socket', '$http',
+        function($scope, $cookies, Socket, $http) {
+
             $scope.mensagens = [];
+            $scope.usuarios = [];
             $scope.corpoMensagem = '';
+            $scope.userName = $cookies.get('userSession');
 
-            var userName = $cookies.get('userSession');
+            //var userName = $cookies.get('userSession');
 
-            if (!userName)
-                alert('Sessão inválida!');
-            else{
-                console.log('novo usuario');
-                Socket.emit('newUser', userName);
+            // Init
+            (function() {
+
+                console.log('init');
+                $http.get('/users', null)
+                    .then((data) => {
+                        console.log(data);
+                    }, (err) => {
+                        console.log(err);
+                    });
+            })()
+            
+            $scope.ownUser = function(username) {
+                return username == $scope.userName;
             }
-                
+
+            if (!$scope.userName)
+                alert('Sessão inválida!');
+            else {
+                Socket.emit('newUser', $scope.userName);
+            }
+
+
+            $scope.limparMensagens = function() {
+                console.log('limpar as mensagens');
+            }
+
             Socket.on('chatMessage', function(message) {
+                console.log(message);
                 $scope.mensagens.push(message);
             });
 
+            Socket.on('newUser', function(username) {
+
+                $scope.usuarios.push({ nome: username });
+            })
+
             $scope.sendMessage = function() {
-                var message = {
-                    username: userName,
-                    message: $scope.corpoMensagem
-                };
 
-                Socket.emit('chatMessage', message);
+                var msg = $scope.corpoMensagem.trim();
+                if (msg.length > 0) {
+                    var message = {
+                        userName: $scope.userName,
+                        message: msg,
+                        data: Date.now()
+                    };
 
-                $scope.corpoMensagem = '';
+                    Socket.emit('chatMessage', message);
+
+                    $scope.corpoMensagem = '';
+                }
+
             };
 
             $scope.$on('$destroy', function() {
                 Socket.removeListener('chatMessage');
             });
+
 
 
         }])

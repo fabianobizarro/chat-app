@@ -66,7 +66,6 @@ gulp.task('images', function() {
 
 gulp.task('build-app', function() {
     return gulp.src(['src/js/app.js', 'src/js/functions.js'])
-        .pipe(uglify())
         .pipe(gulp.dest('wwwroot/js'));
 });
 

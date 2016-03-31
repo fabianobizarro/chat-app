@@ -1,4 +1,4 @@
-angular.module('chat-app', ['ngCookies'])
+angular.module('application')
 
     .service('Socket', ['$timeout', function($timeout) {
 
@@ -78,7 +78,7 @@ angular.module('chat-app', ['ngCookies'])
                         console.log(err);
                     });
             })()
-            
+
             $scope.ownUser = function(username) {
                 return username == $scope.userName;
             }
@@ -128,7 +128,3 @@ angular.module('chat-app', ['ngCookies'])
 
 
         }])
-
-
-
-

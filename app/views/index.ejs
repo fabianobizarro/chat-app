@@ -3,16 +3,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>zChat</title>
+    <title>Chat - App</title>
     <link href="css/app.css" rel="stylesheet" type="text/css">
 
-    <!-- <script src="js/angular-cookies.min.js"></script> -->
+    <script type="text/javascript" src="vendors/angular.min.js"></script>
+    <script src="vendors/angular-cookies.min.js"></script>
+    <script src="js/foundation-angular.js"></script>
     <script src="js/foundation-app.js"></script>
     <script src="js/routes.js"></script>
-    <script src="js/foundation-angular.js"></script>
 
 
-    <!-- <script src="js/app.js"></script> -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/app.js"></script>
     </script>
   </head>
 
@@ -23,42 +25,31 @@
     .avatar-section {border-top: 1px solid #eee;}
   </style>
 
-  <body>
+  <body data-ng-controller="chatController">
     <div class="grid-frame">
       <div zf-panel position="left" id="sidebar" class="medium-grid-block collapse medium-3 large-3 vertical">
         <div class="grid-content collapse shrink hide-for-medium">
           <a href="" class="secondary button expand" zf-close>Close</a>
         </div>
         <div class="grid-content collapse shrink">
-          <img src="http://placehold.it/400x150&text=Logo">
+          <!--<img src="http://placehold.it/400x150&text=Logo">-->
+        <img src="">
         </div>
         <div class="grid-content">
 
           <section class="block-list">
-            <header>Rooms</header>
+            <header>USUÁRIOS</header>
             <ul>
-              <li>
+              <li data-ng-repeat="u in usuarios">
                 <a href="#">
-                  Slam Book
-                  <span class="block-list-label">7</span>
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  Foundation Chat
-                  <span class="block-list-label">2</span>
-                </a>
-              </li>
-              <li>
-                <a class="success" href="#">
-                  LolCats
-                  <span class="block-list-label">2</span>
+                  {{u.nome}}
+                  <span class="block-list-label">online</span>
                 </a>
               </li>
             </ul>
           </section>
 
-          <section class="block-list">
+          <!-- <section class="block-list">
             <header>People</header>
             <ul>
               <li>
@@ -74,11 +65,12 @@
                 </a>
               </li>
             </ul>
-          </section>
+          </section> -->
         </div>
         <div class="grid-content collapse shrink avatar-section">
-            <img src="http://placehold.it/50x50">
-            Regina George
+            <!--<img src="http://placehold.it/50x50">-->
+            <img src="">
+            {{userName}}
         </div>
       </div>
 
@@ -92,41 +84,27 @@
           </ul>
         </div>
         <div class="grid-block">
-          <div class="grid-block small-12 medium-9 vertical">
+          <div class="grid-block small-12 medium-12 vertical">
             <div class="grid-content">
-              <h4><img src="http://placehold.it/30x30"> Cady Heron</h4>
-              <p>Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Suspendisse dictum feugiat nisl ut dapibus. Mauris iaculis porttitor posuere. Praesent id metus massa, ut blandit odio. Proin quis tortor orci. Etiam at risus et justo dignissim congue.</p>
-              <hr />
-              <h4><img src="http://placehold.it/30x30"> Kevin Gnapoor</h4>
-              <p>Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Suspendisse dictum feugiat.</p>
-              <hr />
-              <h4><img src="http://placehold.it/30x30"> Cady Heron</h4>
-              <p>Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Suspendisse dictum feugiat.</p>
-              <hr />
-              <h4><img src="http://placehold.it/30x30"> Trang Pak</h4>
-              <p>Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Suspendisse dictum feugiat.</p>
-              <hr />
-              <h4><img src="http://placehold.it/30x30"> Coach Carr</h4>
-              <p>Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Suspendisse dictum feugiat.</p>
-              <hr />
-              <h4><img src="http://placehold.it/30x30"> Cady Heron</h4>
-              <p>Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Suspendisse dictum feugiat.</p>
-              <hr />
-              <h4><img src="http://placehold.it/30x30"> Trang Pak</h4>
-              <p>Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Suspendisse dictum feugiat.</p>
-              <hr />
-              <h4><img src="http://placehold.it/30x30"> Cady Heron</h4>
-              <p>Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Suspendisse dictum feugiat.</p>
-              <hr />
+                <div id="messages-list" data-ng-repeat="msg in mensagens | orderBy:'data'" data-ng-class="{'text-right': ownUser(msg.userName)}">
+                  <h4>
+                      <img src="img/user.png" width="30" height="30">
+                      {{msg.userName}} <small> - {{msg.data | date: 'dd/MM/yyyy - HH:mm'}}</small>
+                  </h4>
+                  <p>{{msg.message}}</p>
+                  <hr />
+                </div>
             </div>
             <div class="message-input grid-content collapse shrink">
-              <span class="inline-label">
-                <input type="text" placeholder="Message">
-                <a href="#" class="button">Send</a>
-              </span>
+              <form data-ng-submit="sendMessage()">
+                <span class="inline-label">
+                  <input type="text" placeholder="Message" data-ng-model="corpoMensagem">
+                  <a href="#" class="button" data-ng-click="sendMessage()">Send</a>
+                </span>
+              </form>
             </div>
           </div>
-          <div class="grid-content medium-3 show-for-medium message-side-bar">
+          <!-- <div class="grid-content medium-3 show-for-medium message-side-bar">
             <section class="block-list">
               <header>In This Room</header>
               <ul>
@@ -137,7 +115,7 @@
                 <li><a href="#">Regina George</a></li>
               </ul>
             </section>
-          </div>
+          </div> -->
         </div>
       </div>
 

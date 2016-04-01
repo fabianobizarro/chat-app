@@ -1,8 +1,8 @@
-angular.module('application')
+var app = angular.module('application', ['ngCookies'])
 
     .service('Socket', ['$timeout', function($timeout) {
 
-        this.socket = io('192.168.25.6:1234');
+        this.socket = io();
 
         this.on = function(eventName, callback) {
             if (this.socket) {
@@ -27,7 +27,16 @@ angular.module('application')
         }
 
     }])
+    .service('auth', ['$cookies', function($cookies){
 
+      this.getUserName = function () {
+         return $cookies.get('userSession');
+      }
+
+      this.userAuthenticated = function(){
+        return $cookies.get('userSession') !== null && $cookies.get('userSession') !== undefined;
+      }
+    }])
     .controller('loginCtrl', ['$window', '$scope', '$http', '$cookies',
         function($window, $scope, $http, $cookies) {
             $scope.username = null;
@@ -42,8 +51,11 @@ angular.module('application')
                         $scope.loading = false;
                         $scope.mensagem = null;
 
+                        var _now = new Date(Date.now());
+                        var _expirationDate = _now.setDate(_now.getDate() + 7).toString();
+                        
                         if (response.data.sucesso) {
-                            $cookies.put('userSession', response.data.usuario);
+                            $cookies.put('userSession', response.data.usuario, { expires: _expirationDate });
                             $window.location = '/';
                         }
                         else {
@@ -55,25 +67,22 @@ angular.module('application')
                     });
             }
         }])
-
-
-    .controller('chatController', ['$scope', '$cookies', 'Socket', '$http',
-        function($scope, $cookies, Socket, $http) {
+    .controller('chatController', ['$scope', 'auth', 'Socket', '$http',
+        function($scope, auth, Socket, $http) {
 
             $scope.mensagens = [];
             $scope.usuarios = [];
             $scope.corpoMensagem = '';
-            $scope.userName = $cookies.get('userSession');
-
-            //var userName = $cookies.get('userSession');
+            $scope.userName = auth.getUserName();
 
             // Init
             (function() {
-
-                console.log('init');
+                console.log('init controller');
                 $http.get('/users', null)
-                    .then((data) => {
-                        console.log(data);
+                    .then((result) => {
+                        $scope.usuarios = result.data.map(function(usuario){
+                          return { nome: usuario };
+                        })
                     }, (err) => {
                         console.log(err);
                     });
@@ -83,25 +92,31 @@ angular.module('application')
                 return username == $scope.userName;
             }
 
-            if (!$scope.userName)
-                alert('Sessão inválida!');
-            else {
+
+            if (auth.userAuthenticated()){
                 Socket.emit('newUser', $scope.userName);
             }
-
+            else{
+                alert('Sessão inválida!');
+            }
 
             $scope.limparMensagens = function() {
                 console.log('limpar as mensagens');
             }
 
             Socket.on('chatMessage', function(message) {
-                console.log(message);
                 $scope.mensagens.push(message);
             });
 
             Socket.on('newUser', function(username) {
 
                 $scope.usuarios.push({ nome: username });
+
+                var arrayUSer = $scope.usuarios.filter(function(u){
+                  return u == $scope.userName;
+                })
+                console.log('user array: ', arrayUSer);
+
             })
 
             $scope.sendMessage = function() {

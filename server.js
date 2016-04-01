@@ -64,7 +64,10 @@ app.get('/', function(req, res) {
             res.render('index');
     }
     else
+    {
         res.redirect('/login');
+    }
+        
 });
 
 app.get('/users', (req, res) => {

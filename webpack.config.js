@@ -49,7 +49,7 @@ const config = {
         extractSass
     ],
     devServer: {
-        contentBase: path.join(__dirname, 'www'),
+        contentBase: path.join(__dirname, 'wwwroot'),
         compress: true,
         port: 5000
     }

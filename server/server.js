@@ -31,11 +31,7 @@ function userAlreadyExists(username) {
 }
 
 app.get('/', function(req, res) {
-    console.log(__dirname, '../wwwroot/index.html')
-    console.log(_users);
     res.sendfile(path.join(__dirname, '../wwwroot/index.html'));
-
-        
 });
 
 app.get('/users', (req, res) => {

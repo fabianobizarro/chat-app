@@ -11,8 +11,6 @@ module.exports = function (server) {
          */
 
         socket.on('newUser', function (usuario) {
-            console.log('Usuário conectado: ' + usuario);
-            io.emit('chatMessage', { userName: usuario, message: usuario + ' acabou de entrar na conversa!', data: Date.now() });
             io.emit('newUser', usuario);
         });
 
@@ -21,10 +19,7 @@ module.exports = function (server) {
         });
 
         socket.on('message', function (data) {
-            console.log('new message')
-            console.log(data)
-            
-            io.emit('chatMessage', data);
+            io.emit('message', data);
         });
     });
 }

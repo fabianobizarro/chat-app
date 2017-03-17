@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 
 class MessageMe extends Component {
 
-    render() { 
+    render() {
 
         return (
-            <div className="box notification is-info message-me">
+            <div className="box notification is-info message-me animated fadeIn">
                 <article className="media">
                     <div className="media-content">
                         <div className="content">
                             <p>
-                                <text className="is-pulled-right"><strong>@{this.props.message.username}</strong> <small> {this.props.message.date.toString('dd/MM/yyyy')} </small></text>
+                                <text className="is-pulled-right"><strong>@{this.props.message.username}</strong> <small> {this.props.message.date.toLocaleString()} </small></text>
                                 <br />
                                 {this.props.message.content}
                             </p>

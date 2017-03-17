@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import SocketService from '../../services/socketService';
+import { getToken } from '../../services/tokenService';
 
 class Footer extends Component {
 
@@ -9,9 +10,6 @@ class Footer extends Component {
         this.state = {
             message: ''
         };
-
-        
-
         this.handleChange = this.handleChange.bind(this);
         this.sendMessage = this.sendMessage.bind(this);
     }
@@ -20,13 +18,19 @@ class Footer extends Component {
         this.setState({ message: e.target.value });
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.io = io();
     }
 
     sendMessage() {
-        this.io.emit('message', { message: this.state.message });
-        this.setState({ message: '' });
+        if (this.state.message) {
+            this.io.emit('message', {
+                content: this.state.message,
+                date: new Date(),
+                username: getToken()
+            });
+            this.setState({ message: '' });
+        }
     }
 
     render() {

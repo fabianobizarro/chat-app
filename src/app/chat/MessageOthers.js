@@ -5,7 +5,7 @@ class MessageOthers extends Component {
     render() {
         
         return (
-            <div className="box notification message-others">
+            <div className="box notification message-others animated fadeIn">
                 <article className="media">
                     <div className="media-left">
                         <figure className="image is-64x64">
@@ -15,7 +15,7 @@ class MessageOthers extends Component {
                     <div className="media-content">
                         <div className="content">
                             <p>
-                                <strong>@{this.props.message.username}</strong> <small>  {this.props.message.date.toString('dd/MM/yyyy')} </small>
+                                <strong>@{this.props.message.username}</strong> <small>  {this.props.message.date.toLocaleString()} </small>
                                 <br />
                                 {this.props.message.content}
                             </p>

@@ -11,7 +11,7 @@ class MessageList extends Component {
         let user = getToken();
         return this.props.messages.map((m, i) => {
 
-            if (m.type == 'newuser') {
+            if (m.type == 'newUser') {
                 return (
                     <div className="columns" key={i}>
                         <div className="column is-half">

@@ -3,6 +3,7 @@ import Menu from './chat/Menu';
 import Footer from './chat/Footer';
 import MessageList from './chat/MessageList';
 import SocketService from '../services/socketService';
+import { getToken } from '../services/tokenService';
 
 class Chat extends Component {
 
@@ -10,7 +11,8 @@ class Chat extends Component {
         super(props);
 
         this.state = { messages: this.getMessages() };
-        this.io = io();
+        this.onNewMessage = this.onNewMessage.bind(this);
+        this.onNewUser = this.onNewUser.bind(this);
     }
 
     getMessages() {
@@ -18,19 +20,21 @@ class Chat extends Component {
     }
 
     componentDidMount() {
-
-        this.io.emit('message', 'heelo world');
-        this.io.on('message', (data) => {
-            console.log(data);
-        });
-
-        
-
+        this.io = io();
+        this.io.on('message', this.onNewMessage);
+        this.io.on('newUser', this.onNewUser);
     }
 
     onNewMessage(message) {
         this.setState((prev) => {
-            let messages = prev.messages.push({ username: 'fabiano', content: 'hello world!', date: new Date(), type: 'message' });
+            let messages = prev.messages.push(message);
+            return messages;
+        })
+    }
+
+    onNewUser(username) {
+        this.setState((prev) => {
+            let messages = prev.messages.push({ type: 'newUser', username: username });
             return messages;
         })
     }

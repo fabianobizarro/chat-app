@@ -5,8 +5,8 @@
 }
 
 .main {
-    margin-top: 30px;
-    margin-bottom: 60px;
+    margin-top: 30px !important;
+    margin-bottom: 60px !important;
 }
 
 .textarea{

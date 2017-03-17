@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {setToken} from '../../services/tokenService';
+import {deleteToken} from '../../services/tokenService';
 
 class Menu extends Component {
 
@@ -43,7 +43,7 @@ class Menu extends Component {
     }
 
     logout(e){
-        setToken(null);
+        deleteToken();
         this.props.onLogout();
     }
 }

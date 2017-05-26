@@ -1,12 +1,18 @@
 const path = require('path');
+const crypto = require('crypto');
 var express = require('express');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+
+const redis = require('redis');
+
 var app = express();
 var server = require('http').createServer(app);
 var socket = require('./socket');
 
-// == Configurações do express
+const hash = crypto.createHash('sha256');
+
+// == express configuration
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -20,22 +26,32 @@ socket(server);
 
 var _users = [];
 
-function userAlreadyExists(username) {
-    var result = false;
+// function userAlreadyExists(username) {
+//     var result = false;
 
-    for (var user in _users) {
-        if (_users[user] == username)
-            return true;
-    }
-    return result;
-}
+//     for (var user in _users) {
+//         if (_users[user] == username)
+//             return true;
+//     }
+//     return result;
+// }
 
-app.get('/', function(req, res) {
+var client = redis.createClient({ host: '192.168.99.100' });
+
+
+app.get('/', function (req, res) {
     res.sendfile(path.join(__dirname, '../wwwroot/index.html'));
 });
 
 app.get('/users', (req, res) => {
-    res.json(_users);
+    client.keys('*', (err, keys) => {
+        if (err) {
+            console.log(err);
+            res.status(500).end(err);
+        }
+        res.json(keys);
+    })
+
 });
 
 app.get('/login', (req, res) => {
@@ -44,22 +60,49 @@ app.get('/login', (req, res) => {
 
 app.post('/login', (req, res) => {
 
-    var newUser = req.body.username;
+    let newUser = req.body.username;
 
-    if (userAlreadyExists(newUser)) {
-        return res.json({
-            sucesso: false,
-            mensagem: 'Já existe um usuário com o nome ' + newUser
-        });
-    }
-    else {
-        _users.push(newUser);
+    hash.update(newUser);
 
-        res.json({
-            sucesso: true,
-            usuario: newUser
-        })
-    }
+    let hashName = crypto.createHash('sha256').update(newUser).digest('hex');
+
+    client.get(hashName, (err, result) => {
+        if (err)
+            return res.status(500).json(err);
+
+        if (result) { //value exists
+            return res.status(400).json({
+                sucesso: false,
+                mensagem: 'Já existe um usuário com o nome ' + newUser
+            });
+        }
+        else {
+
+
+            client.set(hashName, { username: newUser });
+            return res.json({
+                sucesso: true,
+                usuario: newUser
+            });
+        }
+
+
+    });
+
+    // if (userAlreadyExists(newUser)) {
+    //     return res.json({
+    //         sucesso: false,
+    //         mensagem: 'Já existe um usuário com o nome ' + newUser
+    //     });
+    // }
+    // else {
+    //     _users.push(newUser);
+
+    //     res.json({
+    //         sucesso: true,
+    //         usuario: newUser
+    //     })
+    // }
 });
 
 

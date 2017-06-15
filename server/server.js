@@ -4,8 +4,6 @@ var express = require('express');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-const redis = require('redis');
-
 var app = express();
 var server = require('http').createServer(app);
 var socket = require('./socket');
@@ -26,17 +24,15 @@ socket(server);
 
 var _users = [];
 
-// function userAlreadyExists(username) {
-//     var result = false;
+function userExists(username) {
+    var result = false;
 
-//     for (var user in _users) {
-//         if (_users[user] == username)
-//             return true;
-//     }
-//     return result;
-// }
-
-var client = redis.createClient({ host: '192.168.99.100' });
+    for (var user in _users) {
+        if (_users[user] == username)
+            return true;
+    }
+    return result;
+}
 
 
 app.get('/', function (req, res) {
@@ -44,14 +40,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/users', (req, res) => {
-    client.keys('*', (err, keys) => {
-        if (err) {
-            console.log(err);
-            res.status(500).end(err);
-        }
-        res.json(keys);
-    })
-
+    return res.json(_users);
 });
 
 app.get('/login', (req, res) => {
@@ -62,47 +51,20 @@ app.post('/login', (req, res) => {
 
     let newUser = req.body.username;
 
-    hash.update(newUser);
+    if (userExists(newUser)) {
+        return res.json({
+            sucesso: false,
+            mensagem: 'Já existe um usuário com o nome ' + newUser
+        });
+    }
+    else {
+        _users.push(newUser);
 
-    let hashName = crypto.createHash('sha256').update(newUser).digest('hex');
-
-    client.get(hashName, (err, result) => {
-        if (err)
-            return res.status(500).json(err);
-
-        if (result) { //value exists
-            return res.status(400).json({
-                sucesso: false,
-                mensagem: 'Já existe um usuário com o nome ' + newUser
-            });
-        }
-        else {
-
-
-            client.set(hashName, { username: newUser });
-            return res.json({
-                sucesso: true,
-                usuario: newUser
-            });
-        }
-
-
-    });
-
-    // if (userAlreadyExists(newUser)) {
-    //     return res.json({
-    //         sucesso: false,
-    //         mensagem: 'Já existe um usuário com o nome ' + newUser
-    //     });
-    // }
-    // else {
-    //     _users.push(newUser);
-
-    //     res.json({
-    //         sucesso: true,
-    //         usuario: newUser
-    //     })
-    // }
+        res.json({
+            sucesso: true,
+            usuario: newUser
+        })
+    }
 });
 
 

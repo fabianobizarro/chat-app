@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import SocketService from '../../services/socketService';
 import { getToken } from '../../services/tokenService';
 
+import SocketClient from 'socket.io-client';
+
+
 class Footer extends Component {
 
     constructor(props) {
@@ -12,6 +15,7 @@ class Footer extends Component {
         };
         this.handleChange = this.handleChange.bind(this);
         this.sendMessage = this.sendMessage.bind(this);
+
     }
 
     handleChange(e) {
@@ -19,11 +23,11 @@ class Footer extends Component {
     }
 
     componentDidMount() {
-        this.io = io();
+        this.io = SocketClient('http://localhost:1234');
     }
 
     sendMessage() {
-        if (this.state.message) {
+        if (this.state.message !== '') {
             this.io.emit('message', {
                 content: this.state.message,
                 date: new Date(),
@@ -39,14 +43,16 @@ class Footer extends Component {
                 <div className="content">
                     <div className="columns">
                         <div className="column">
-                            <div className="control is-grouped">
-                                <p className="control is-expanded">
-                                    <textarea className="textarea" value={this.state.message} onChange={this.handleChange} placeholder="Message"></textarea>
-                                </p>
-                                <p className="control">
-                                    <a className="button is-info" onClick={this.sendMessage}>Send</a>
-                                </p>
-                            </div>
+                            <form method="POST" onSubmit={e => e.preventDefault()}>
+                                <div className="control is-grouped">
+                                    <p className="control is-expanded">
+                                        <input type="text" className="textarea" value={this.state.message} onChange={this.handleChange} placeholder="Message" />
+                                    </p>
+                                    <p className="control">
+                                        <button type="submit" className="button is-info" onClick={this.sendMessage} tabIndex="-1">Send</button>
+                                    </p>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>

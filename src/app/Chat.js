@@ -5,6 +5,8 @@ import MessageList from './chat/MessageList';
 import SocketService from '../services/socketService';
 import { getToken } from '../services/tokenService';
 
+import SocketClient from 'socket.io-client';
+
 class Chat extends Component {
 
     constructor(props) {
@@ -20,7 +22,7 @@ class Chat extends Component {
     }
 
     componentDidMount() {
-        this.io = io();
+        this.io = SocketClient('http://localhost:1234');
         this.io.on('message', this.onNewMessage);
         this.io.on('newUser', this.onNewUser);
     }

@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { setToken } from '../services/tokenService';
-import axios from 'axios';
+import * as api from '../../services/api';
+import { connect } from 'react-redux';
+import { setUser } from './actions';
 
-class Login extends Component {
+
+export class Login extends Component {
 
     constructor(props) {
         super(props);
@@ -11,7 +13,7 @@ class Login extends Component {
 
         this.username = null;
 
-        this.onButtonClick = this.onButtonClick.bind(this);
+        this.submit = this.submit.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
 
@@ -29,16 +31,21 @@ class Login extends Component {
                         <div className="columns">
                             <div className="column is-offset-one-quarter is-half">
                                 <div className="box">
-                                    <label className="label">Usuário</label>
-                                    <p className="control">
-                                        <input className="input" type="text" placeholder="Seu nome de usuário aqui..." onChange={this.handleChange} />
-                                    </p>
+                                    <form onSubmit={this.submit}>
 
-                                    <div className="control is-grouped">
+                                        <label className="label">Usuário</label>
                                         <p className="control">
-                                            <button className={buttonClasses} onClick={this.onButtonClick}>Enviar</button>
+                                            <input className="input" type="text" placeholder="Seu nome de usuário aqui..." onChange={this.handleChange} />
                                         </p>
-                                    </div>
+
+                                        <div className="control is-grouped">
+                                            <p className="control">
+                                                <button className={buttonClasses}>Enviar</button>
+                                            </p>
+                                        </div>
+
+                                    </form>
+
                                 </div>
                             </div>
                         </div>
@@ -49,13 +56,14 @@ class Login extends Component {
         );
     }
 
-    onButtonClick(event) {
+    submit(event) {
+        event.preventDefault();
         this.setState({ loading: true });
-        axios.post('/login', { username: this.username })
-            .then(result => {
-                setToken(this.username);
+
+        api.login(this.username)
+            .then(() => {
                 this.setState({ loading: false });
-                this.props.onLogin(this.username);
+                this.props.setUser(this.username);
             }, err => {
                 this.setState({ loading: false });
                 console.log(err)
@@ -67,4 +75,12 @@ class Login extends Component {
     }
 }
 
-export default Login;
+const mapDispatchToProps = (dispatch) => ({
+    setUser: (user) => {
+        dispatch(setUser(user));
+    }
+});
+
+const Container = connect(null, mapDispatchToProps)(Login);
+
+export default Container;

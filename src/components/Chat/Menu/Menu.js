@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import {deleteToken} from '../../services/tokenService';
+
+import { connect } from 'react-redux';
+import { removeUser } from '../../Login/actions';
+import { clearMessages } from '../actions';
 
 class Menu extends Component {
 
@@ -16,13 +19,15 @@ class Menu extends Component {
 
         let navToggleClasses = 'nav-toggle ' + this.state.toggled ? 'is-active' : '';
         let menuClasses = ' ' + this.state.toggled ? 'is-active' : '';
-        
+
         return (
             <div className="nav has-shadow is-fixed">
                 <div className="nav-left">
                     <div className="nav-item">
-                        logo
-			        </div>
+                        <strong>
+                            @{this.props.user}
+                        </strong>
+                    </div>
                 </div>
                 <div className={"nav-right nav-menu " + (this.state.toggled ? 'is-active' : '')} id="menu-options">
                     <a href="#" className="nav-item is-tab" onClick={this.logout} >Logout</a>
@@ -42,10 +47,22 @@ class Menu extends Component {
         })
     }
 
-    logout(e){
-        deleteToken();
-        this.props.onLogout();
+    logout(e) {
+        this.props.logout();
     }
 }
 
-export default Menu;
+const mapStateToProps = (state) => ({
+    user: state.user
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    logout: () => {
+        dispatch(clearMessages());
+        dispatch(removeUser());
+    }
+});
+
+const Container = connect(mapStateToProps, mapDispatchToProps)(Menu);
+
+export default Container;

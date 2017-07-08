@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import SocketService from '../../services/socketService';
-import { getToken } from '../../services/tokenService';
-
+import SocketService from '../../../services/socket';
+import { connect } from 'react-redux';
 import SocketClient from 'socket.io-client';
 
 
@@ -31,7 +30,7 @@ class Footer extends Component {
             this.io.emit('message', {
                 content: this.state.message,
                 date: new Date(),
-                username: getToken()
+                username: this.props.username
             });
             this.setState({ message: '' });
         }
@@ -46,10 +45,19 @@ class Footer extends Component {
                             <form method="POST" onSubmit={e => e.preventDefault()}>
                                 <div className="control is-grouped">
                                     <p className="control is-expanded">
-                                        <input type="text" className="textarea" value={this.state.message} onChange={this.handleChange} placeholder="Message" />
+                                        <input 
+                                            type="text" 
+                                            className="textarea" 
+                                            value={this.state.message} 
+                                            onChange={this.handleChange}
+                                            placeholder="Message" />
                                     </p>
                                     <p className="control">
-                                        <button type="submit" className="button is-info" onClick={this.sendMessage} tabIndex="-1">Send</button>
+                                        <button 
+                                            type="submit"
+                                            className="button is-info" 
+                                            onClick={this.sendMessage} 
+                                            tabIndex="-1">Send</button>
                                     </p>
                                 </div>
                             </form>
@@ -61,4 +69,10 @@ class Footer extends Component {
     }
 }
 
-export default Footer;
+const mapStateToProps = (state) =>({
+    username: state.user
+});
+
+const Container = connect(mapStateToProps)(Footer);
+
+export default Container;

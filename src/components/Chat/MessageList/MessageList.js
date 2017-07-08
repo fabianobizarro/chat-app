@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import Message from './Message';
-import MessageMe from './MessageMe';
-import MessageOthers from './MessageOthers';
-import NewUserMessage from './NewUserMessage';
-import { getToken } from '../../services/tokenService';
+import Message from '../Message/Message';
+import MessageMe from '../Message/MessageMe';
+import MessageOthers from '../Message/MessageOthers';
+import NewUserMessage from '../Message/NewUserMessage';
+
+import { connect } from 'react-redux';
 
 class MessageList extends Component {
 
     renderMessages() {
-        let user = getToken();
+        let { user } = this.props;
         return this.props.messages.map((m, i) => {
 
             if (m.type == 'newUser') {
@@ -45,10 +46,17 @@ class MessageList extends Component {
     render() {
         return (
             <section className="section container main">
+                {/*{JSON.stringify(this.props.messages)}*/}
                 {this.renderMessages()}
             </section>
         );
     }
 }
 
-export default MessageList;
+const mapStatToProps = (state) => ({
+    user: state.user
+});
+
+const Container = connect(mapStatToProps)(MessageList);
+
+export default Container;

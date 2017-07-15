@@ -66,7 +66,6 @@ export class Login extends Component {
                 this.props.setUser(this.username);
             }, err => {
                 this.setState({ loading: false });
-                console.log(err)
             });
     }
 

@@ -32,10 +32,6 @@ class Chat extends Component {
         this.props.addUser(username);
     }
 
-    toggleUsers(e) {
-        console.log(this.props)
-    }
-
     render() {
         return (
             <div>

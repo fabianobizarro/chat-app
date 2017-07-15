@@ -68,7 +68,8 @@ app.post('/login', (req, res) => {
 });
 
 
-const port = process.env.APP_PORT || 1234;
+let port = process.env.APP_PORT || 1234;
+
 server.listen(port);
 
 console.log(`Server running at http://localhost:${port}`);

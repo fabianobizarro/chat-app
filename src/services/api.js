@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const login = (username) => {
+export function login(username) {
 
     return new Promise((resolve, reject) => {
         axios.post('/login', { username })
@@ -9,3 +9,12 @@ export const login = (username) => {
 
 }
 
+
+export function fetchUsers() {
+    return new Promise((resolve, reject) => {
+        axios.get('/users')
+            .then(result => {
+                resolve(result.data);
+            }, reject);
+    });
+}

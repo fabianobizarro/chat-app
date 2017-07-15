@@ -35,12 +35,12 @@ export class Login extends Component {
 
                                         <label className="label">Usuário</label>
                                         <p className="control">
-                                            <input className="input" type="text" placeholder="Seu nome de usuário aqui..." onChange={this.handleChange} />
+                                            <input className="input" type="text" placeholder="Your username..." onChange={this.handleChange} />
                                         </p>
 
                                         <div className="control is-grouped">
                                             <p className="control">
-                                                <button className={buttonClasses}>Enviar</button>
+                                                <button className={buttonClasses}>Enter</button>
                                             </p>
                                         </div>
 

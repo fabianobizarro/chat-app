@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import Menu from './Menu/Menu';
+import SideMenu from './Users/Users';
 import Footer from './Footer/Footer';
 import MessageList from './MessageList/MessageList';
-import SocketService from '../../services/socket';
+import * as socket from '../../services/socket';
 
-import SocketClient from 'socket.io-client';
-import { addMessage } from './actions';
+import { addMessage, addUser } from './actions';
 
 import { connect } from 'react-redux';
 
@@ -19,9 +19,8 @@ class Chat extends Component {
     }
 
     componentDidMount() {
-        this.io = SocketClient('http://localhost:1234');
-        this.io.on('message', this.onNewMessage);
-        this.io.on('newUser', this.onNewUser);
+        socket.onNewUser(this.onNewUser);
+        socket.onMessage(this.onNewMessage);
     }
 
     onNewMessage(message) {
@@ -30,15 +29,21 @@ class Chat extends Component {
 
     onNewUser(username) {
         console.log(username)
-        this.props.addMessage({ type: 'newUser', username: username });
+        this.props.addUser(username);
+    }
+
+    toggleUsers(e) {
+        console.log(this.props)
     }
 
     render() {
         return (
             <div>
-                <Menu />
-                <MessageList messages={this.props.messages} />
-                <Footer />
+                <SideMenu>
+                    <Menu />
+                    <MessageList messages={this.props.messages} />
+                    <Footer />
+                </SideMenu>
             </div>
         );
     }
@@ -51,6 +56,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     addMessage: (message) => {
         dispatch(addMessage(message));
+    },
+    addUser: (user) => {
+        dispatch(addUser(user));
     }
 })
 

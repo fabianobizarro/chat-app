@@ -9,3 +9,30 @@ export const addMessage = (message) => ({
 export const clearMessages = () => ({
     type: CLEAR_MESSAGES
 });
+
+
+export const SET_USERS = 'SET_USERS';
+export const ADD_USER = 'ADD_USER';
+
+export const setUsers = (users) => ({
+    type: SET_USERS,
+    users
+});
+
+export const addUser = (user) => ({
+    type: ADD_USER,
+    user
+});
+
+export const SELECT_THREAD = 'SELECT_THREAD';
+
+export const selectThread = (thread) => ({
+    type: SELECT_THREAD,
+    thread
+});
+
+export const TOGGLE_USERS_MENU = 'TOGGLE_USERS_MENU';
+
+export const toggleUsersMenu = () => ({
+    type: TOGGLE_USERS_MENU
+});

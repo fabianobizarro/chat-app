@@ -1,28 +1,26 @@
-class SocketService {
+import SocketClient from 'socket.io-client';
 
-    constructor() {
-        this.socket = io();
+const io = SocketClient();
+
+
+export function on(eventName, callback) {
+    if (io) {
+        io.on(eventName, (data) => {
+            callback(data);
+        })
     }
-
-    on(eventName, callback) {
-        if (this.socket) {
-            this.socket.on(eventName, (data) => {
-                console.log(data);
-                callback(data);
-            })
-        }
-    }
-
-    emit(eventName, data) {
-        if (this.socket) {
-            this.socket.emit(eventName, data);
-        }
-    }
-
-    removeListener(eventName) {
-        console.log('removeListener')
-    }
-
 }
 
-export default SocketService;
+export function onMessage(callback) {
+    on('message', callback);
+}
+
+export function onNewUser(callback) {
+    on('newUser', callback);
+}
+
+export function emit(eventName, data) {
+    if (io) {
+        io.emit(eventName, data);
+    }
+}

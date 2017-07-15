@@ -4,8 +4,9 @@
   "description": "A base Chat application",
   "main": "server.js",
   "scripts": {
-    "start": "node server/server.js",
+    "start": "npm run build:prod && node server/server.js",
     "build": "webpack",
+    "build:prod": "webpack --config=webpack.prod.config.js",
     "watch": "webpack -w",
     "serve": "concurrently --kill-others \"webpack -w\" \"npm start\""
   },
@@ -13,17 +14,17 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.15.0",
-    "bulma": "^0.4.3",
     "cookie-parser": "^1.4.3",
     "ejs": "^2.5.6",
     "express": "^4.15.3",
+    "socket.io": "^2.0.3"
+  },
+  "devDependencies": {
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.5",
     "redux": "^3.7.1",
-    "socket.io": "^2.0.3"
-  },
-  "devDependencies": {
+    "bulma": "^0.4.3",
     "animate.css": "^3.5.2",
     "axios": "^0.15.3",
     "babel-cli": "^6.24.1",

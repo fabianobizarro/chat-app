@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import SocketService from '../../../services/socket';
+import { emit } from '../../../services/socket';
 import { connect } from 'react-redux';
-import SocketClient from 'socket.io-client';
 
 
-class Footer extends Component {
+export class Footer extends Component {
 
     constructor(props) {
         super(props);
@@ -21,13 +20,10 @@ class Footer extends Component {
         this.setState({ message: e.target.value });
     }
 
-    componentDidMount() {
-        this.io = SocketClient('http://localhost:1234');
-    }
-
     sendMessage() {
         if (this.state.message !== '') {
-            this.io.emit('message', {
+
+            emit('message', {
                 content: this.state.message,
                 date: new Date(),
                 username: this.props.username
@@ -45,18 +41,18 @@ class Footer extends Component {
                             <form method="POST" onSubmit={e => e.preventDefault()}>
                                 <div className="control is-grouped">
                                     <p className="control is-expanded">
-                                        <input 
-                                            type="text" 
-                                            className="textarea" 
-                                            value={this.state.message} 
+                                        <input
+                                            type="text"
+                                            className="textarea"
+                                            value={this.state.message}
                                             onChange={this.handleChange}
                                             placeholder="Message" />
                                     </p>
                                     <p className="control">
-                                        <button 
+                                        <button
                                             type="submit"
-                                            className="button is-info" 
-                                            onClick={this.sendMessage} 
+                                            className="button is-info"
+                                            onClick={this.sendMessage}
                                             tabIndex="-1">Send</button>
                                     </p>
                                 </div>
@@ -69,7 +65,7 @@ class Footer extends Component {
     }
 }
 
-const mapStateToProps = (state) =>({
+const mapStateToProps = (state) => ({
     username: state.user
 });
 

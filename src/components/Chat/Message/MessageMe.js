@@ -7,6 +7,7 @@ class MessageMe extends Component {
     render() {
 
         return (
+
             <div className="box notification is-info message-box message-me animated fadeIn">
                 <article className="media">
                     <div className="media-content">
@@ -28,6 +29,7 @@ class MessageMe extends Component {
                     </div>
                 </article>
             </div>
+
         );
     }
 }

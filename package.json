@@ -4,7 +4,8 @@
   "description": "A base Chat application",
   "main": "server.js",
   "scripts": {
-    "start": "npm run build:prod && node server/server.js",
+    "prestart": "npm run build:prod",
+    "start": "node server/server.js",
     "build": "webpack",
     "build:prod": "webpack --config=webpack.prod.config.js",
     "watch": "webpack -w",

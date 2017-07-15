@@ -6,7 +6,7 @@ COPY . /app
 
 RUN npm install
 
-ENV APP_PORT=80
+ENV PORT=80
 EXPOSE $APP_PORT
 
 CMD ["npm", "start"]

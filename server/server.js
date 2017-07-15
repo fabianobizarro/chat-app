@@ -68,7 +68,7 @@ app.post('/login', (req, res) => {
 });
 
 
-let port = process.env.APP_PORT || 1234;
+let port = process.env.PORT || 1234;
 
 server.listen(port);
 

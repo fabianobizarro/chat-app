@@ -24,7 +24,8 @@ class Chat extends Component {
     }
 
     onNewMessage(message) {
-        this.props.addMessage(message);
+        if (message.to === this.props.user)
+            this.props.addMessage(message);
     }
 
     onNewUser(username) {
@@ -46,7 +47,8 @@ class Chat extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    messages: state.messages
+    messages: state.messages,
+    user: state.user
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -3,7 +3,7 @@ import './users.css';
 import * as api from '../../../services/api'
 import * as socket from '../../../services/socket'
 
-import { setUsers } from '../actions';
+import { setUsers, addThread, selectThread, toggleUsersMenu } from '../actions';
 
 import { connect } from 'react-redux';
 
@@ -40,7 +40,11 @@ export class Users extends Component {
                                     return u !== this.props.user
                                 })
                                 .map((u, i) => (
-                                    <li key={i}> <a> @{u} </a> </li>
+                                    <li key={i}>
+                                        <a onClick={e => this.props.selectUser(u)}>
+                                            @{u}
+                                        </a>
+                                    </li>
                                 ))
                         }
                     </ul>
@@ -65,6 +69,11 @@ const mapState = (state) => ({
 const mapDispatch = (dispatch) => ({
     setUsers: (users) => {
         dispatch(setUsers(users));
+    },
+    selectUser: (user) => {
+        dispatch(addThread(user));
+        dispatch(selectThread(user));
+        dispatch(toggleUsersMenu())
     }
 })
 

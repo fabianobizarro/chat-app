@@ -24,9 +24,10 @@ export class Footer extends Component {
         if (this.state.message !== '') {
 
             emit('message', {
+                to: this.props.thread,
                 content: this.state.message,
                 date: new Date(),
-                username: this.props.username
+                from: this.props.username
             });
             this.setState({ message: '' });
         }
@@ -39,22 +40,22 @@ export class Footer extends Component {
                     <div className="columns">
                         <div className="column">
                             <form method="POST" onSubmit={e => e.preventDefault()}>
-                                <div className="control is-grouped">
-                                    <p className="control is-expanded">
+                                <div className="field has-addons">
+                                    <div className="control is-expanded">
                                         <input
                                             type="text"
-                                            className="textarea"
+                                            className="input"
                                             value={this.state.message}
                                             onChange={this.handleChange}
                                             placeholder="Message" />
-                                    </p>
-                                    <p className="control">
+                                    </div>
+                                    <div className="control">
                                         <button
                                             type="submit"
                                             className="button is-info"
                                             onClick={this.sendMessage}
                                             tabIndex="-1">Send</button>
-                                    </p>
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -66,7 +67,8 @@ export class Footer extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    username: state.user
+    username: state.user,
+    thread: state.selectedThread
 });
 
 const Container = connect(mapStateToProps)(Footer);

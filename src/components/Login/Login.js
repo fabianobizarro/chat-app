@@ -9,9 +9,7 @@ export class Login extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { loading: false };
-
-        this.username = null;
+        this.state = { loading: false, username: '' };
 
         this.submit = this.submit.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -33,14 +31,14 @@ export class Login extends Component {
                                 <div className="box">
                                     <form onSubmit={this.submit}>
 
-                                        <label className="label">Usuário</label>
+                                        <label className="label">User</label>
                                         <p className="control">
                                             <input className="input" type="text" placeholder="Your username..." onChange={this.handleChange} />
                                         </p>
-
-                                        <div className="control is-grouped">
+                                        <br />
+                                        <div className="control">
                                             <p className="control">
-                                                <button className={buttonClasses}>Enter</button>
+                                                <button className={buttonClasses}>Enter as @{this.formattedUserName(this.state.username) || 'your_user_name'}</button>
                                             </p>
                                         </div>
 
@@ -56,21 +54,30 @@ export class Login extends Component {
         );
     }
 
+    formattedUserName(name) {
+        if (name)
+            return name.replace(/[ ]/g, '');
+
+        return name;
+    }
+
     submit(event) {
         event.preventDefault();
         this.setState({ loading: true });
 
-        api.login(this.username)
+        let login = this.formattedUserName(this.state.username);
+
+        api.login(login)
             .then(() => {
                 this.setState({ loading: false });
-                this.props.setUser(this.username);
+                this.props.setUser(login);
             }, err => {
                 this.setState({ loading: false });
             });
     }
 
     handleChange(event) {
-        this.username = event.target.value;
+        this.setState({ username: event.target.value });
     }
 }
 

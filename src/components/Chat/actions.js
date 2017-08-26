@@ -25,9 +25,21 @@ export const addUser = (user) => ({
 });
 
 export const SELECT_THREAD = 'SELECT_THREAD';
+export const ADD_THREAD = 'ADD_THREAD';
+export const REMOVE_THREAD = 'REMOVE_THREAD';
 
 export const selectThread = (thread) => ({
     type: SELECT_THREAD,
+    thread
+});
+
+export const addThread = (thread) => ({
+    type: ADD_THREAD,
+    thread
+});
+
+export const removeThread = (thread) => ({
+    type: REMOVE_THREAD,
     thread
 });
 

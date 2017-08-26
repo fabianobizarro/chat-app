@@ -4,6 +4,7 @@ var express = require('express');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+const users = require('./users');
 var app = express();
 var server = require('http').createServer(app);
 var socket = require('./socket');
@@ -22,25 +23,12 @@ app.use(express.static('wwwroot'));
 
 socket(server);
 
-var _users = [];
-
-function userExists(username) {
-    var result = false;
-
-    for (var user in _users) {
-        if (_users[user] == username)
-            return true;
-    }
-    return result;
-}
-
-
 app.get('/', function (req, res) {
     res.sendfile(path.join(__dirname, '../wwwroot/index.html'));
 });
 
 app.get('/users', (req, res) => {
-    return res.json(_users);
+    return res.json(users.getUsers());
 });
 
 app.get('/login', (req, res) => {
@@ -51,18 +39,18 @@ app.post('/login', (req, res) => {
 
     let newUser = req.body.username;
 
-    if (userExists(newUser)) {
+    if (users.userExists(newUser)) {
         return res.json({
             sucesso: false,
-            mensagem: 'Já existe um usuário com o nome ' + newUser
+            mensagem: 'User already exists: ' + newUser
         });
     }
     else {
-        _users.push(newUser);
+        users.addUser(newUser);
 
         res.json({
-            sucesso: true,
-            usuario: newUser
+            success: true,
+            user: newUser
         })
     }
 });

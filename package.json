@@ -8,8 +8,7 @@
     "start": "node server/server.js",
     "build": "webpack",
     "build:prod": "webpack --config=webpack.prod.config.js",
-    "watch": "webpack -w",
-    "serve": "concurrently --kill-others \"webpack -w\" \"npm start\""
+    "serve": "concurrently --kill-others \"webpack -w --config=webpack.config.js \" \" node server/server.js \""
   },
   "author": "",
   "license": "ISC",

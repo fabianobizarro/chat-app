@@ -8,7 +8,9 @@
     "start": "node server/server.js",
     "build": "webpack",
     "build:prod": "webpack --config=webpack.prod.config.js",
-    "serve": "concurrently --kill-others \"webpack -w --config=webpack.config.js \" \" node server/server.js \""
+    "serve": "concurrently --kill-others \"webpack -w --config=webpack.config.js \" \" node server/server.js \"",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "author": "",
   "license": "ISC",
@@ -39,9 +41,11 @@
     "postcss-loader": "^2.0.6",
     "sass-loader": "6.0.6",
     "socket.io-client": "^2.0.3",
-    "style-loader": "^0.18.2"
+    "style-loader": "^0.18.2",
+    "snyk": "^1.85.0"
   },
   "devDependencies": {
     "webpack-dev-server": "^2.5.1"
-  }
+  },
+  "snyk": true
 }

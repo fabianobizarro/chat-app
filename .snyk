@@ -6,3 +6,6 @@ patch:
   SNYK-JS-TREEKILL-536781:
     - concurrently > tree-kill:
         patched: '2019-12-12T04:25:30.337Z'
+  'npm:debug:20170905':
+    - snyk > proxy-agent > pac-proxy-agent > get-uri > debug:
+        patched: '2019-12-12T11:15:10.818Z'

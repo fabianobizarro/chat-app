@@ -37,7 +37,7 @@
     "concurrently": "^3.4.0",
     "css-loader": "^1.0.0",
     "extract-text-webpack-plugin": "^2.1.2",
-    "node-sass": "^7.0.0",
+    "node-sass": "^7.0.2",
     "postcss-loader": "^2.0.6",
     "sass-loader": "6.0.6",
     "socket.io-client": "^2.4.0",
